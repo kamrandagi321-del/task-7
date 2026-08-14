@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Laiba-urooj • Instagram</title>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background:#fff;
+    color:#262626;
+  }
+  a{ text-decoration:none; color:inherit; }
+
+  /* ===== LAYOUT ===== */
+  .app{ display:flex; min-height:100vh; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar{
+    width:245px;
+    flex-shrink:0;
+    border-right:1px solid #dbdbdb;
+    padding:20px 12px;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    position:sticky;
+    top:0;
+  }
+  .logo{
+    font-family:Georgia, 'Times New Roman', serif;
+    font-size:26px;
+    font-weight:600;
+    padding:12px 12px 24px;
+  }
+  .nav{ display:flex; flex-direction:column; gap:2px; flex:1; }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+  }
+  .nav-item:hover{ background:#fafafa; }
+  .nav-item.active{ font-weight:700; }
+  .nav-item svg{ width:24px; height:24px; flex-shrink:0; }
+  .nav-item .avatar-icon{
+    width:24px; height:24px; border-radius:50%;
+    background:#efefef; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:#8e8e8e; overflow:hidden;
+  }
+  .nav-label{ white-space:nowrap; }
+
+  /* ===== MAIN ===== */
+  .main{ flex:1; max-width:975px; margin:0 auto; padding:30px 20px; }
+
+  .profile-header{ display:flex; gap:30px; padding:0 0 44px; flex-wrap:wrap; }
+  .avatar{
+    width:150px; height:150px; border-radius:50%;
+    background:linear-gradient(135deg,#f5a3c7,#c9a6f5);
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:48px; font-weight:600;
+    overflow:hidden;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+  .profile-info{ flex:1; min-width:240px; }
+  .profile-top{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+  .username{ font-size:28px; font-weight:300; }
+  .btn{
+    padding:7px 16px;
+    border-radius:8px;
+    border:1px solid #dbdbdb;
+    background:#efefef;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn:hover{ background:#dbdbdb; }
+  .stats{ display:flex; gap:36px; margin-bottom:20px; font-size:16px; }
+  .stats b{ font-weight:600; }
+  .bio{ font-size:14px; line-height:1.5; }
+  .bio .name{ font-weight:600; }
+
+  .highlights{ display:flex; gap:24px; padding:20px 0 30px; overflow-x:auto; }
+  .highlight{ display:flex; flex-direction:column; align-items:center; gap:8px; flex-shrink:0; }
+  .highlight-circle{
+    width:77px; height:77px; border-radius:50%;
+    border:1px solid #dbdbdb;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .highlight-circle img{ width:100%; height:100%; object-fit:cover; }
+  .highlight-circle.new{ font-size:26px; color:#262626; border-style:solid; }
+  .highlight span{ font-size:12px; }
+
+  .tabs{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    border-top:1px solid #dbdbdb;
+  }
+  .tab{
+    display:flex; align-items:center; gap:6px;
+    padding:16px 0;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.5px;
+    color:#8e8e8e;
+    cursor:pointer;
+    border-top:1px solid transparent;
+    margin-top:-1px;
+  }
+  .tab.active{ color:#262626; border-top:1px solid #262626; }
+  .tab svg{ width:12px; height:12px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:4px;
+    padding-top:4px;
+  }
+  .grid-item{
+    aspect-ratio:1/1;
+    background:#efefef;
+    overflow:hidden;
+  }
+  .grid-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* ===== MOBILE BOTTOM NAV ===== */
+  .bottom-nav{
+    display:none;
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background:#fff;
+    border-top:1px solid #dbdbdb;
+    justify-content:space-around;
+    align-items:center;
+    padding:10px 6px;
+    z-index:10;
+  }
+  .bottom-nav svg{ width:24px; height:24px; }
+  .bottom-nav .avatar-icon{
+    width:24px; height:24px; border-radius:50%; overflow:hidden;
+    background:linear-gradient(135deg,#f5a3c7,#c9a6f5);
+  }
+  .bottom-nav .avatar-icon img{ width:100%; height:100%; object-fit:cover; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1264px){
+    .sidebar{ width:88px; align-items:center; }
+    .logo{ display:none; }
+    .nav-label{ display:none; }
+    .nav-item{ justify-content:center; }
+  }
+
+  @media (max-width: 768px){
+    .sidebar{ display:none; }
+    .bottom-nav{ display:flex; }
+    .main{ padding:20px 12px 80px; }
+    .profile-header{ gap:16px; }
+    .avatar{ width:90px; height:90px; font-size:30px; }
+    .username{ font-size:20px; }
+    .stats{ gap:20px; font-size:14px; }
+    .grid{ gap:2px; }
+    .highlight-circle{ width:64px; height:64px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo">Instagram</div>
+    <div class="nav">
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        <span class="nav-label">Home</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="nav-label">Search</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z"/></svg>
+        <span class="nav-label">Explore</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M10 9l6 3-6 3z"/></svg>
+        <span class="nav-label">Reels</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3L3 10l7 3 3 7 8-17z"/></svg>
+        <span class="nav-label">Messages</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5.6 5.6 0 0 0-9.6-3.9 5.6 5.6 0 0 0-9 6.7c1.6 3.7 9 9.6 9 9.6s7.4-5.9 9-9.6a5.5 5.5 0 0 0 .6-2.8z"/></svg>
+        <span class="nav-label">Notifications</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+        <span class="nav-label">Create</span>
+      </a>
+      <a class="nav-item active" href="#">
+        <span class="avatar-icon"><img src="https://i.pravatar.cc/40?img=47" alt=""/></span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </div>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <span class="nav-label">More</span>
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <section class="profile-header">
+      <div class="avatar"><img src="https://i.pravatar.cc/300?img=47" alt="profile photo"/></div>
+      <div class="profile-info">
+        <div class="profile-top">
+          <div class="username">Laiba-urooj</div>
+          <button class="btn">Edit profile</button>
+        </div>
+        <div class="stats">
+          <div><b>1</b> post</div>
+          <div><b>177</b> followers</div>
+          <div><b>137</b> following</div>
+        </div>
+        <div class="bio">
+          <div class="name">Laiba urooj</div>
+          <div>I'am an software engineering student</div>
+          <div>ENSAO</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="highlights">
+      <div class="highlight">
+        <div class="highlight-circle"><img src="https://picsum.photos/seed/conseils/150" alt=""/></div>
+        <span>conseils</span>
+      </div>
+      <div class="highlight">
+        <div class="highlight-circle new">+</div>
+        <span>New</span>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <div class="tab active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        POSTS
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h14v18l-7-5-7 5V3z"/></svg>
+        SAVED
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        TAGGED
+      </div>
+    </nav>
+
+    <section class="grid">
+      <div class="grid-item"><img src="https://picsum.photos/seed/leopard/400" alt=""/></div>
+      <div class="grid-item"><img src="https://picsum.photos/seed/mountain1/400" alt=""/></div>
+      <div class="grid-item"><img src="https://picsum.photos/seed/sunset1/400" alt=""/></div>
+      <div class="grid-item"><img src="https://picsum.photos/seed/pink1/400" alt=""/></div>
+      <div class="grid-item"><img src="https://picsum.photos/seed/blossom1/400" alt=""/></div>
+    </section>
+  </main>
+
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M10 9l6 3-6 3z"/></svg></a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3L3 10l7 3 3 7 8-17z"/></svg></a>
+  <a href="#"><span class="avatar-icon"><img src="https://i.pravatar.cc/40?img=47" alt=""/></span></a>
+</nav>
+
+</body>
+</html>
